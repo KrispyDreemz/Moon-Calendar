@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Moon Calendar</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="sky" aria-hidden="true">
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+    </div>
+    <header>
+      <p class="eyebrow">Local-first lunar rhythm</p>
+      <h1>Moon Calendar</h1>
+      <p class="subtitle">
+        A 28-day cycle inspired by Indigenous calendrical concepts, common full moon
+        names, and zodiac-style archetypes. This is a reflective rhythm tool, not
+        an authoritative or predictive calendar.
+      </p>
+    </header>
+
+    <main>
+      <section class="panel">
+        <h2>Cycle anchors</h2>
+        <p class="helper">
+          Choose the day you want to count as Cycle Day 1. Your choice is saved
+          locally in this browser.
+        </p>
+        <div class="controls">
+          <label for="start-date">Cycle start date</label>
+          <input type="date" id="start-date" />
+          <button id="set-start" type="button">Save start date</button>
+        </div>
+        <div class="controls">
+          <button id="prev-day" type="button">Previous day</button>
+          <button id="go-today" type="button">Today</button>
+          <button id="next-day" type="button">Next day</button>
+        </div>
+      </section>
+
+      <section class="panel highlight" aria-live="polite">
+        <p class="date" id="display-date"></p>
+        <h2 id="cycle-day"></h2>
+        <div class="details">
+          <div>
+            <p class="label">Moon phase</p>
+            <p class="value" id="moon-phase"></p>
+          </div>
+          <div>
+            <p class="label">Moon name</p>
+            <p class="value" id="moon-name"></p>
+          </div>
+          <div>
+            <p class="label">Archetype</p>
+            <p class="value" id="archetype"></p>
+          </div>
+        </div>
+        <blockquote id="affirmation"></blockquote>
+      </section>
+
+      <section class="panel">
+        <h2>Reflection</h2>
+        <p class="helper">
+          Capture a gentle prompt, intention, or observation. Each note is saved
+          locally and tied to the day you are viewing.
+        </p>
+        <textarea
+          id="reflection"
+          name="reflection"
+          placeholder="What wants your attention today?"
+          rows="5"
+        ></textarea>
+      </section>
+
+      <section class="panel note">
+        <h2>Respect &amp; care</h2>
+        <p>
+          This app is inspired by Indigenous calendrical concepts and well-known
+          full moon names. It is not a replacement for any cultural tradition or
+          an authoritative source of Indigenous knowledge.
+        </p>
+        <p>
+          The archetypes and affirmations offered here are meant to be grounding
+          and non-clinical, inviting reflection rather than prediction.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <p>Built for offline-friendly, local-first reflection.</p>
+    </footer>
+
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
