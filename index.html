@@ -40,6 +40,24 @@
           <button id="go-today" type="button">Today</button>
           <button id="next-day" type="button">Next day</button>
         </div>
+        <div class="controls">
+          <button id="prev-month" type="button">Prev Month</button>
+          <button id="next-month" type="button">Next Month</button>
+        </div>
+        <div class="controls">
+          <label for="jump-month">Jump to Month/Year</label>
+          <select id="jump-month" name="jump-month"></select>
+          <input
+            type="number"
+            id="jump-year"
+            name="jump-year"
+            min="1"
+            step="1"
+            aria-label="Jump to lunar year"
+          />
+          <button id="jump-to-month" type="button">Go</button>
+        </div>
+        <p class="helper" id="lunar-month-label"></p>
       </section>
 
       <section class="panel highlight" aria-live="polite">
