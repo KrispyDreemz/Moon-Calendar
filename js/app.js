@@ -1,4 +1,10 @@
-import { cycleDays, LUNAR_YEAR_LENGTH, lunarDayMap } from "./data.js";
+import {
+  cycleDays,
+  LUNAR_MONTH_LENGTH,
+  LUNAR_YEAR_LENGTH,
+  lunarDayMap,
+  lunarMonths
+} from "./data.js";
 import {
   getReflection,
   getStoredStartDate,
@@ -14,9 +20,15 @@ const elements = {
   todayButton: document.querySelector("#go-today"),
   prevButton: document.querySelector("#prev-day"),
   nextButton: document.querySelector("#next-day"),
+  prevMonthButton: document.querySelector("#prev-month"),
+  nextMonthButton: document.querySelector("#next-month"),
+  jumpMonthSelect: document.querySelector("#jump-month"),
+  jumpYearInput: document.querySelector("#jump-year"),
+  jumpToMonthButton: document.querySelector("#jump-to-month"),
   displayDate: document.querySelector("#display-date"),
   cycleDay: document.querySelector("#cycle-day"),
   lunarDay: document.querySelector("#lunar-day"),
+  lunarMonthLabel: document.querySelector("#lunar-month-label"),
   moonPhase: document.querySelector("#moon-phase"),
   moonName: document.querySelector("#moon-name"),
   archetype: document.querySelector("#archetype"),
@@ -46,6 +58,14 @@ function getLunarDate(startDate, currentDate) {
   return lunarDayMap[dayOfYear];
 }
 
+function getLunarYearMonth(startDate, currentDate) {
+  const diffDays = Math.floor((currentDate - startDate) / MS_PER_DAY);
+  const dayOfYear = ((diffDays % LUNAR_YEAR_LENGTH) + LUNAR_YEAR_LENGTH) % LUNAR_YEAR_LENGTH;
+  const yearIndex = Math.floor(diffDays / LUNAR_YEAR_LENGTH);
+  const monthIndex = Math.floor(dayOfYear / LUNAR_MONTH_LENGTH) + 1;
+  return { dayOfYear, monthIndex, yearIndex };
+}
+
 function ensureStartDate() {
   const storedDate = getStoredStartDate();
   const today = normalizeDate(new Date());
@@ -61,6 +81,15 @@ function ensureStartDate() {
 
 let cycleStartDate = ensureStartDate();
 
+function buildMonthOptions() {
+  lunarMonths.forEach((month) => {
+    const option = document.createElement("option");
+    option.value = String(month.index);
+    option.textContent = `${month.index} — ${month.name}`;
+    elements.jumpMonthSelect.append(option);
+  });
+}
+
 function updateReflection(dateKey) {
   elements.reflectionInput.value = getReflection(dateKey);
 }
@@ -70,6 +99,8 @@ function render() {
   const cycleIndex = getCycleIndex(cycleStartDate, viewDate);
   const cycleDay = cycleDays[cycleIndex];
   const lunarDate = getLunarDate(cycleStartDate, viewDate);
+  const lunarYearMonth = getLunarYearMonth(cycleStartDate, viewDate);
+  const lunarMonth = lunarMonths[lunarYearMonth.monthIndex - 1];
 
   elements.displayDate.textContent = viewDate.toLocaleDateString(undefined, {
     weekday: "long",
@@ -79,10 +110,16 @@ function render() {
   });
   elements.cycleDay.textContent = `Cycle Day ${cycleDay.day} of 28`;
   elements.lunarDay.textContent = `Month ${lunarDate.monthIndex} (${lunarDate.monthName}) • Day ${lunarDate.dayInMonth}`;
+  elements.lunarMonthLabel.textContent = `Viewing Lunar Month ${lunarMonth.index} (${lunarMonth.name}) • Year ${
+    lunarYearMonth.yearIndex + 1
+  }`;
   elements.moonPhase.textContent = cycleDay.phase;
   elements.moonName.textContent = cycleDay.moonName;
   elements.archetype.textContent = cycleDay.archetype;
   elements.affirmation.textContent = cycleDay.affirmation;
+
+  elements.jumpMonthSelect.value = String(lunarMonth.index);
+  elements.jumpYearInput.value = String(lunarYearMonth.yearIndex + 1);
 
   updateReflection(displayKey);
 }
@@ -111,10 +148,30 @@ elements.prevButton.addEventListener("click", () => shiftViewDate(-1));
 
 elements.nextButton.addEventListener("click", () => shiftViewDate(1));
 
+elements.prevMonthButton.addEventListener("click", () => shiftViewDate(-LUNAR_MONTH_LENGTH));
+
+elements.nextMonthButton.addEventListener("click", () => shiftViewDate(LUNAR_MONTH_LENGTH));
+
+elements.jumpToMonthButton.addEventListener("click", () => {
+  const monthValue = Number.parseInt(elements.jumpMonthSelect.value, 10);
+  const yearValue = Number.parseInt(elements.jumpYearInput.value, 10);
+
+  if (Number.isNaN(monthValue) || Number.isNaN(yearValue)) {
+    return;
+  }
+
+  const yearIndex = yearValue - 1;
+  const totalDays =
+    yearIndex * LUNAR_YEAR_LENGTH + (monthValue - 1) * LUNAR_MONTH_LENGTH;
+  viewDate = normalizeDate(new Date(cycleStartDate.getTime() + totalDays * MS_PER_DAY));
+  render();
+});
+
 elements.reflectionInput.addEventListener("input", (event) => {
   const value = event.target.value;
   const dateKey = toISODate(viewDate);
   setReflection(dateKey, value);
 });
 
+buildMonthOptions();
 render();
