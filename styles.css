@@ -133,6 +133,13 @@ button:focus-visible {
   font-size: 0.85rem;
 }
 
+.lunar-day {
+  margin: -0.6rem 0 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #d7d0ff;
+}
+
 .details {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
