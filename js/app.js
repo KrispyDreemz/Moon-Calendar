@@ -66,6 +66,12 @@ function getLunarYearMonth(startDate, currentDate) {
   return { dayOfYear, monthIndex, yearIndex };
 }
 
+function getLunarKey(startDate, currentDate) {
+  const lunarDate = getLunarDate(startDate, currentDate);
+  const lunarYearMonth = getLunarYearMonth(startDate, currentDate);
+  return `${lunarYearMonth.yearIndex + 1}-${lunarYearMonth.monthIndex}-${lunarDate.dayInMonth}`;
+}
+
 function ensureStartDate() {
   const storedDate = getStoredStartDate();
   const today = normalizeDate(new Date());
@@ -91,7 +97,10 @@ function buildMonthOptions() {
 }
 
 function updateReflection(dateKey) {
-  elements.reflectionInput.value = getReflection(dateKey);
+  const todayKey = toISODate(normalizeDate(new Date()));
+  const legacyKey = dateKey === todayKey ? dateKey : null;
+  const lunarKey = getLunarKey(cycleStartDate, viewDate);
+  elements.reflectionInput.value = getReflection(lunarKey, legacyKey);
 }
 
 function render() {
@@ -169,8 +178,8 @@ elements.jumpToMonthButton.addEventListener("click", () => {
 
 elements.reflectionInput.addEventListener("input", (event) => {
   const value = event.target.value;
-  const dateKey = toISODate(viewDate);
-  setReflection(dateKey, value);
+  const lunarKey = getLunarKey(cycleStartDate, viewDate);
+  setReflection(lunarKey, value);
 });
 
 buildMonthOptions();
