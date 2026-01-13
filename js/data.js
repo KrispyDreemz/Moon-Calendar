@@ -1,3 +1,90 @@
+export const lunarMonths = [
+  {
+    index: 1,
+    name: "Wolf Moon",
+    keywords: ["listening", "stillness", "beginnings"]
+  },
+  {
+    index: 2,
+    name: "Snow Moon",
+    keywords: ["nourishment", "stability", "warmth"]
+  },
+  {
+    index: 3,
+    name: "Worm Moon",
+    keywords: ["growth", "curiosity", "tending"]
+  },
+  {
+    index: 4,
+    name: "Pink Moon",
+    keywords: ["expression", "radiance", "connection"]
+  },
+  {
+    index: 5,
+    name: "Flower Moon",
+    keywords: ["creativity", "beauty", "play"]
+  },
+  {
+    index: 6,
+    name: "Strawberry Moon",
+    keywords: ["harvest", "gratitude", "reflection"]
+  },
+  {
+    index: 7,
+    name: "Buck Moon",
+    keywords: ["direction", "protection", "trust"]
+  },
+  {
+    index: 8,
+    name: "Sturgeon Moon",
+    keywords: ["depth", "restoration", "courage"]
+  },
+  {
+    index: 9,
+    name: "Corn Moon",
+    keywords: ["planning", "stewardship", "clarity"]
+  },
+  {
+    index: 10,
+    name: "Harvest Moon",
+    keywords: ["balance", "reverence", "integration"]
+  },
+  {
+    index: 11,
+    name: "Hunter's Moon",
+    keywords: ["insight", "guidance", "illumination"]
+  },
+  {
+    index: 12,
+    name: "Beaver Moon",
+    keywords: ["preparation", "compassion", "craft"]
+  },
+  {
+    index: 13,
+    name: "Cold Moon",
+    keywords: ["closure", "release", "renewal"]
+  }
+];
+
+export const LUNAR_MONTH_LENGTH = 28;
+export const LUNAR_YEAR_LENGTH = lunarMonths.length * LUNAR_MONTH_LENGTH;
+
+export const lunarDayMap = Array.from(
+  { length: LUNAR_YEAR_LENGTH },
+  (_, index) => {
+    const monthIndex = Math.floor(index / LUNAR_MONTH_LENGTH);
+    const dayInMonth = (index % LUNAR_MONTH_LENGTH) + 1;
+    const month = lunarMonths[monthIndex];
+    return {
+      dayOfYear: index + 1,
+      monthIndex: month.index,
+      monthName: month.name,
+      dayInMonth,
+      keywords: month.keywords
+    };
+  }
+);
+
 export const cycleDays = [
   {
     day: 1,

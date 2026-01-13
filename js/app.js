@@ -1,4 +1,4 @@
-import { cycleDays } from "./data.js";
+import { cycleDays, LUNAR_YEAR_LENGTH, lunarDayMap } from "./data.js";
 import {
   getReflection,
   getStoredStartDate,
@@ -16,6 +16,7 @@ const elements = {
   nextButton: document.querySelector("#next-day"),
   displayDate: document.querySelector("#display-date"),
   cycleDay: document.querySelector("#cycle-day"),
+  lunarDay: document.querySelector("#lunar-day"),
   moonPhase: document.querySelector("#moon-phase"),
   moonName: document.querySelector("#moon-name"),
   archetype: document.querySelector("#archetype"),
@@ -37,6 +38,12 @@ function getCycleIndex(startDate, currentDate) {
   const diffDays = Math.floor((currentDate - startDate) / MS_PER_DAY);
   const mod = ((diffDays % 28) + 28) % 28;
   return mod;
+}
+
+function getLunarDate(startDate, currentDate) {
+  const diffDays = Math.floor((currentDate - startDate) / MS_PER_DAY);
+  const dayOfYear = ((diffDays % LUNAR_YEAR_LENGTH) + LUNAR_YEAR_LENGTH) % LUNAR_YEAR_LENGTH;
+  return lunarDayMap[dayOfYear];
 }
 
 function ensureStartDate() {
@@ -62,6 +69,7 @@ function render() {
   const displayKey = toISODate(viewDate);
   const cycleIndex = getCycleIndex(cycleStartDate, viewDate);
   const cycleDay = cycleDays[cycleIndex];
+  const lunarDate = getLunarDate(cycleStartDate, viewDate);
 
   elements.displayDate.textContent = viewDate.toLocaleDateString(undefined, {
     weekday: "long",
@@ -70,6 +78,7 @@ function render() {
     year: "numeric"
   });
   elements.cycleDay.textContent = `Cycle Day ${cycleDay.day} of 28`;
+  elements.lunarDay.textContent = `Month ${lunarDate.monthIndex} (${lunarDate.monthName}) • Day ${lunarDate.dayInMonth}`;
   elements.moonPhase.textContent = cycleDay.phase;
   elements.moonName.textContent = cycleDay.moonName;
   elements.archetype.textContent = cycleDay.archetype;
